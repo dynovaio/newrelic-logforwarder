@@ -38,29 +38,10 @@ FUNCTION_APP_NAME="fn-logforwarder-afn"
 az functionapp config appsettings set \
     --name "${FUNCTION_APP_NAME}" \
     --resource-group "${RESOURCE_GROUP_NAME}" \
-    --settings "NR_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}"
-
-az functionapp config appsettings set \
-    --name "${FUNCTION_APP_NAME}" \
-    --resource-group "${RESOURCE_GROUP_NAME}" \
-    --settings "eventHubName=${EVENT_HUB_CONNECTION_STRING}"
-
-az functionapp config appsettings set \
-    --name "${FUNCTION_APP_NAME}" \
-    --resource-group "${RESOURCE_GROUP_NAME}" \
-    --settings "NR_TRIGGER_PATH=${EVENT_HUB_NAME}"
-
-az functionapp config appsettings set \
-    --name "${FUNCTION_APP_NAME}" \
-    --resource-group "${RESOURCE_GROUP_NAME}" \
-    --settings "NR_ENVIRONMENT=qa"
-
-az functionapp config appsettings set \
-    --name "${FUNCTION_APP_NAME}" \
-    --resource-group "${RESOURCE_GROUP_NAME}" \
-    --settings "NR_CUSTOM_PROPERTIES_PREFIX=sb"
-
-az functionapp config appsettings set \
-    --name "${FUNCTION_APP_NAME}" \
-    --resource-group "${RESOURCE_GROUP_NAME}" \
-    --settings "NR_ENVIRONMENT=qa"
+    --settings \
+        "NR_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}" \
+        "NR_TRIGGER_CONNECTION_STRING=${EVENT_HUB_CONNECTION_STRING}" \
+        "eventHubName=${EVENT_HUB_NAME}" \
+        "NR_ENVIRONMENT=qa" \
+        "NR_CUSTOM_PROPERTIES_PREFIX=sb" \
+        "NR_ENVIRONMENT=dev"
