@@ -62,13 +62,10 @@ To use this project, you will need to follow these steps:
    directory. This scripts can be run using the following command:
 
     ```bash
-    # Do not modify the values of the variables
-    function_app_runtime="node"
-    function_app_runtime_version="20"
-
     # Modify the values of the variables according to your requirements
     location="eastus"
     resource_group_name="my-resource-group"
+    function_app_runtime_version="20"
     new_relic_license_key="YOUR_NEW_RELIC_LICENSE_KEY"
 
     ./scripts/create_resourcegroup.sh \
@@ -76,9 +73,11 @@ To use this project, you will need to follow these steps:
         $location
 
     ./scripts/create_functionapp.sh \
-        $function_app_name \
-        $function_app_runtime \
         $function_app_runtime_version \
+        $resource_group_name \
+        $location
+
+    ./scripts/create_eventhub.sh \
         $resource_group_name \
         $location
 
@@ -96,9 +95,37 @@ To use this project, you will need to follow these steps:
     using the following command:
 
     ```bash
+    # Modify the values of the variables according to your requirements
+    $resource_id = "my-resource-id"
+    $resource_group_name = "my-resource-group"
+    $log_configuration = "my-log-configuration"
+    $metrics_configuration = "my-metrics-configuration"
+
     ./scripts/stream_logs_to_event_hub.sh \
         $resource_id \
-        $resource_group_name
+        $resource_group_name \
+        $log_configuration \
+        $metrics_configuration
+    ```
+
+    The variables must be replaced with the correct values according to your
+    target resource. The `resource_id` is the id of the resource that you want
+    to stream logs from. The `log_configuration` and `metrics_configuration`
+    are the log and metrics configurations that you want to stream to the Event
+    Hub.
+
+    For example, in the case of azure functions, you can use the following
+
+    ```bash
+    resource_id=$(
+        az functionapp show
+            --name $function_app_name
+            --resource-group $function_app_resource_group_name
+            --query id
+            --output tsv
+    )
+    log_configuration="'[{\\\"category\\\": \\\"FunctionAppLogs\\\", \\\"enabled\\\": true}]'"
+    metrics_configuration="'[{\\\"category\\\": \\\"AllMetrics\\\", \\\"enabled\\\": true}]'"
     ```
 
 6. Check the logs in New Relic.
