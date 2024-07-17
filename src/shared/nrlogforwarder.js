@@ -306,6 +306,17 @@ function processLog (log, context) {
                     ...otherProperties,
                     message,
                 };
+            } else if (typeof properties.message === 'string' && properties.message !== '') {
+                let { message, ...otherProperties } = properties;
+
+                structuredLog = {
+                    ...structuredLog,
+                    message,
+                }
+
+                properties = {
+                    ...otherProperties,
+                }
             }
 
             structuredLog = {
@@ -580,8 +591,6 @@ function wait (delay) {
 
 const NewRelicLogForwarder = async (messages, context) => {
     context.log(`Event hub function processed ${messages.length} messages from "${context.triggerMetadata.partitionContext.eventHubName}" `);
-
-    context.log(JSON.stringify(messages));
 
     if (!NR_LICENSE_KEY && !NR_INSERT_KEY) {
         context.log.error(
